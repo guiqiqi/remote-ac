@@ -14,7 +14,7 @@ class Measurement(Base):
     __tablename__ = 'measurements'
 
     id = Column(Integer, primary_key=True)
-    temprature = Column(Float)
+    temperature = Column(Float)
     humidity = Column(Float)
     ctime = Column(DateTime, default=datetime.now)
 

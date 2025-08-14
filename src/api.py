@@ -19,6 +19,7 @@ def aggregator(limit: int = 10) -> Aggregator:
         measurements.append(MeasurementModel.model_validate(
             measurement, from_attributes=True))
     command = session.query(Command).order_by(Command.ctime.desc()).first()
+    session.close()
     if command is None:
         return Aggregator(measurements=measurements, status=False)
     else:
@@ -46,6 +47,7 @@ def command(power: CommandExecution) -> CommandExecution:
     session.flush()
     session.commit()
     command = session.query(Command).order_by(Command.ctime.desc()).first()
+    session.close()
     if command:
         return CommandExecution(status=bool(command.status))
     else:

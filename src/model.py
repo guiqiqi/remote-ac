@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 class Measurement(BaseModel):
-    temprature: float
+    temperature: float
     humidity: float
     ctime: datetime = Field(default_factory=datetime.now)
 

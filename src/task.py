@@ -15,11 +15,12 @@ def measure() -> MeasurementModel:
     measurement = MeasurementModel.model_validate(response.json())
     session = SessionMaker()
     session.add(MeasurementDB(
-        temprature=measurement.temprature,
+        temperature=measurement.temperature,
         humidity=measurement.humidity,
         ctime=measurement.ctime
     ))
     session.commit()
+    session.close()
     return measurement
 
 
