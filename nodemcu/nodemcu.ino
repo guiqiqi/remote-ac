@@ -71,7 +71,7 @@ void measure() {
   // Check if measurement successful
   if (result == 0) {
     Server.send(200, WEB_JSON_HEADER,
-                jsonify(2, "temprature", String(temperature), "humidity", String(humidity)));
+                jsonify(2, "temperature", String(temperature), "humidity", String(humidity)));
     wlog(200);
   } else {
     Server.send(400, WEB_JSON_HEADER, jsonify(1, "message", DHT11::getErrorString(result)));
