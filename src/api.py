@@ -1,5 +1,5 @@
 import requests
-from fastapi import FastAPI
+from fastapi import APIRouter
 
 from .config import settings
 from .model import Aggregator, CommandExecution
@@ -8,15 +8,16 @@ from .orm import Measurement, Command
 from .orm import SessionMaker
 from .task import measure
 
-app = FastAPI()
+router = APIRouter(prefix='/api')
 
 
-@app.get('/')
+@router.get('/')
 def aggregator(limit: int = 10) -> Aggregator:
     session = SessionMaker()
     measurements = []
     for measurement in session.query(Measurement).order_by(Measurement.ctime.desc()).limit(limit):
-        measurements.append(MeasurementModel.model_validate(measurement, from_attributes=True))
+        measurements.append(MeasurementModel.model_validate(
+            measurement, from_attributes=True))
     command = session.query(Command).order_by(Command.ctime.desc()).first()
     if command is None:
         return Aggregator(measurements=measurements, status=False)
@@ -24,12 +25,12 @@ def aggregator(limit: int = 10) -> Aggregator:
         return Aggregator(measurements=measurements, status=bool(command.status))
 
 
-@app.post('/measure')
+@router.post('/measure')
 def manually() -> MeasurementModel:
     return measure()
 
 
-@app.post('/command')
+@router.post('/command')
 def command(power: CommandExecution) -> CommandExecution:
     if power.status:
         response = requests.get(
